@@ -7,9 +7,9 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Reflection;
 
-namespace GlobalCapitalTests.TestUtils.Framework
+namespace CS.TestUtils
 {
-    public class ProgressiveTestHandler
+    public class ProgressiveTestHandler : IDisposable
     {
         #region Properties & Fields
 
@@ -46,10 +46,10 @@ namespace GlobalCapitalTests.TestUtils.Framework
 
         public void Open(string title = "Test Progress")
         {
+            f = new ProgressForm(title);
             t = new Thread(() =>
             {
-                Application.EnableVisualStyles();
-                using (f = new ProgressForm(title)) f.ShowDialog();
+                f.ShowDialog();
             });
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
@@ -83,18 +83,50 @@ namespace GlobalCapitalTests.TestUtils.Framework
         }
 
         #endregion
+
+        #region Implement IDisposable
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            {
+                this.Close();
+                if (f != null)
+                {
+                    f.Dispose();
+                    f = null;
+                }
+            }
+        }
+
+        #endregion
     }
 
     public class ProgressiveTest
     {
-        protected static ProgressiveTestHandler mainHandler = new ProgressiveTestHandler();
+        #region Singleton Pattern
+
+        protected static ProgressiveTestHandler mainHandler;
 
         public ProgressiveTestHandler Progress
         {
             get
             {
+                if (mainHandler == null)
+                {
+                    Application.EnableVisualStyles();
+                    mainHandler = new ProgressiveTestHandler();
+                }
                 return mainHandler;
             }
         }
+
+        #endregion
     }
 }

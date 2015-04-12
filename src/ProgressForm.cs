@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Windows.Forms;
 
-namespace GlobalCapitalTests.TestUtils.Framework
+namespace CS.TestUtils
 {
     public partial class ProgressForm : Form
     {
@@ -34,6 +34,8 @@ namespace GlobalCapitalTests.TestUtils.Framework
             Border = 18
         }
 
+        [SecurityPermission(SecurityAction.InheritanceDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);

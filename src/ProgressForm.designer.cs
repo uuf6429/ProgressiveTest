@@ -1,4 +1,4 @@
-﻿namespace GlobalCapitalTests.TestUtils.Framework
+﻿namespace CS.TestUtils
 {
     partial class ProgressForm
     {
